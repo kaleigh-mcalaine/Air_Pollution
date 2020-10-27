@@ -89,6 +89,7 @@ using namespace std;
     string height_effective_stack_input, height_stack_input, height_plume_rise_input;
     string surface_wind_speed_input;
     string sigma_y_input, sigma_z_input;
+    double end_program; // hit any key to end the program (for users without their IDE set up to keep window up after running)
 
     
 double find_stability_class(int wind)
@@ -157,7 +158,7 @@ double calc_conc_w_reflection(double x_m, double y_m, double z_m, double emissio
 double get_sigma_y_vars(int class_num)
 {
     switch(class_num)
-    { // all variables come from Table 1-1: PARAMETERS USED TO CALCULATE PASemissions_strengthUILL GIFFORD FY from the EPA
+    { // all constants come from Table 1-1: PARAMETERS USED TO CALCULATE PASQUILL GIFFORD FY from the EPAB (source 1)
         case 0: // A
             var_c = 24.1670;
             var_d = 2.5334;
@@ -310,12 +311,8 @@ int main()
     {
         while (input_info != "a" && input_info != "s" && input_info != "v")
         {    
-            cout << "Do you want to know more about the [a]ccuracy of this model, [s]ources of equations & functions, or [v]ariables needed to run this model?" << endl;
+            cout << "Do you want to know more about the [s]ources of equations & functions, or [v]ariables needed to run this model?" << endl;
             cin >> input_info;
-        }
-        if (input_info == "a") //accuracy - might delete check
-        {
-            cout << "a" << endl;
         }
         if (input_info == "s") //sources
         {
@@ -471,11 +468,11 @@ int main()
     z_m = between[2];
     x_km = x_m/1000; // convert to kilometers
 
-    get_sigma_z_vars(x_km, num_pasquill_stability_class);
+    /*get_sigma_z_vars(x_km, num_pasquill_stability_class);
     sigma_z = calc_sigma_z(var_a, var_b, x_km);
 
     get_sigma_y_vars(num_pasquill_stability_class);
-    sigma_y = calc_sigma_y(var_c, var_d, x_km);
+    sigma_y = calc_sigma_y(var_c, var_d, x_km);*/
 
 
 // DISPERSION COEFFICIENT INPUTS / STABILITY CLASS CALCULATIONS
@@ -484,7 +481,7 @@ int main()
         cout << "Do you know the dispersion coefficients sigma y and sigma z? [y]es or [n]o?" << endl; 
         cin >> input_sigmas;
     }
-    if(input_sigmas == "n") // User does not have dispersion coefficient --> proceed to calculate with stability class
+    if (input_sigmas == "n") // User does not have dispersion coefficient --> proceed to calculate with stability class
     {
         while (calc_stability_class != "n" && calc_stability_class != "y") //Does the user know the Pasquil Gifford Stability class? if no --> proceed to next while loop - surface wind speed
         {
@@ -567,11 +564,17 @@ int main()
                 wind_array_index = 4;
             }
 
-            num_pasquill_stability_class = find_stability_class(wind_array_index);
-            cout << "The Pasquill Stability Class is " << Numeric_to_Alphabet[num_pasquill_stability_class] << ". This classification will be used to approximate the dispersion coefficients of the plume. " << endl;  
+            num_pasquill_stability_class = find_stability_class(wind_array_index);  
         } 
+        get_sigma_z_vars(x_km, num_pasquill_stability_class);
+        sigma_z = calc_sigma_z(var_a, var_b, x_km);
+
+        get_sigma_y_vars(num_pasquill_stability_class);
+        sigma_y = calc_sigma_y(var_c, var_d, x_km);
+
+        cout << "The Pasquill Stability Class is " << Numeric_to_Alphabet[num_pasquill_stability_class] << ". This classification is used to approximate the dispersion coefficients of the plume. " << endl;
     } 
-    if(input_sigmas == "y") //User input dispersion coefficients, stability class/surface wind not needed
+    if (input_sigmas == "y") //User input dispersion coefficients, stability class/surface wind not needed
     {
         while (sigma_y == false) //User inputs only numerical operators
         {
@@ -605,12 +608,13 @@ int main()
         }
     }
 //check
-    //cout << "sigma_y = " << sigma_y << " var c is " << var_c << " var_d is " << var_d << endl;
+    cout << "sigma_y = " << sigma_y << " var c is " << var_c << " var_d is " << var_d << endl;
     // cout << "theta is = " << theta << endl;
-    //cout << "sigma_z = " << sigma_z << " var a is " << var_a << " var_b is " << var_b << endl;
+    cout << "sigma_z = " << sigma_z << " var a is " << var_a << " var_b is " << var_b << endl;
     conc = calc_conc_w_reflection(x_m, y_m, z_m, emissions_strength, height_effective_stack, plume_wind_speed, sigma_y, sigma_z);
     conc_ug = conc*1000000;
     cout << "The concentration at " << x_m << "m, " << y_m << "m, " << z_m << "m from the source is " << conc << " grams/meters^3 or ";
     cout << conc_ug << " micrograms/meters^3. " << endl;
+    cin >> end_program;
 
 }
