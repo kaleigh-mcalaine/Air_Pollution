@@ -83,7 +83,6 @@ using namespace std;
     double x_dist_limit;
     double conc, conc_ug;
     string emissions_strength_input, check_num_output;
-    double back_2_double;
     string between_input[3];
     string plume_wind_speed_input;
     string height_effective_stack_input, height_stack_input, height_plume_rise_input;
@@ -317,10 +316,10 @@ int main()
         if (input_info == "s") //sources
         {
             cout << "(1) The User's Guide for the Industrial Souce Complex (ISC3) Dispersion Models, Volume II - Description of Model Algorithsm, September 1995" << endl; //https://www3.epa.gov/scram001/userg/regmod/isc3v2.pdf
-            cout << "- calculate concentration with reflection function" << endl;
-            cout << "- get variables for / calculate sigma y/z functions" << endl;
+            cout << " - calculate concentration with reflection function" << endl;
+            cout << " - get variables for / calculate sigma y/z functions" << endl;
             cout << "(2) NOAA's Air Resources Laboratory: READY Tools: Pasquill Stability Classes" << endl; //https://www.ready.noaa.gov/READYpgclass.php
-            cout << "- find stability class function" << endl;
+            cout << " - find stability class function" << endl;
             cout << endl;
         }
         if (input_info == "v") //variables required
@@ -331,20 +330,20 @@ int main()
             cout << "y     = distance in the y direction perpendicular to the wind between the point of interest and the source [METERS]" << endl;
             cout << "z     = distance in the z vertical direction between the ground and the point of interest [METERS]" << endl;
             cout << "H     = effective stack height [METERS]" << endl; 
-            cout << "        + There is an option to calculate H with stack height & plume rise [METERS]" << endl;
+            cout << "        OR There is an option to calculate H with stack height & plume rise [METERS]" << endl;
             cout << "u1    = wind speed through the plume / at stack height [METERS/SECOND]" << endl;
-            cout << "σy/σz = dispersion parameter [METERS]" << endl;
+            cout << "sigy/z= dispersion parameter [METERS]" << endl;
             cout << "        + If known, σy/σz can be entered." << endl;
-            cout << "        + If unknown, they will be calculated using:" << endl;
+            cout << "        OR If unknown, they will be calculated using:" << endl;
             cout << "        x = distance in the x direction between the point of interest and the source [METERS]" << endl;
             cout << "        s = Pasquill Gifford Stability Class [A, B, C, D, E, or F]" << endl;
-            cout << "            + If the stability class is unknown, it will be calculated using:" << endl;
+            cout << "            OR If the stability class is unknown, it will be calculated using:" << endl;
             cout << "            u2 = wind speed at ground level [METERS/SECOND]" << endl;
             cout << "            + & time of day (nighttime or daytime), and solar radiation or cloud cover, respectively." << endl;
             cout << endl;
         }
     }
-    if (more_info == "n") //continue
+    if (more_info == "n")
     {} 
 
 //EMISSION STRENGTH CALCULATIONS
@@ -467,13 +466,6 @@ int main()
     y_m = between[1];
     z_m = between[2];
     x_km = x_m/1000; // convert to kilometers
-
-    /*get_sigma_z_vars(x_km, num_pasquill_stability_class);
-    sigma_z = calc_sigma_z(var_a, var_b, x_km);
-
-    get_sigma_y_vars(num_pasquill_stability_class);
-    sigma_y = calc_sigma_y(var_c, var_d, x_km);*/
-
 
 // DISPERSION COEFFICIENT INPUTS / STABILITY CLASS CALCULATIONS
     while (input_sigmas != "n" && input_sigmas != "y") //Does the user know dispersion coefficients? if no --> proceed to next while loop - stability class
@@ -607,14 +599,12 @@ int main()
             }
         }
     }
-//check
-    cout << "sigma_y = " << sigma_y << " var c is " << var_c << " var_d is " << var_d << endl;
-    // cout << "theta is = " << theta << endl;
-    cout << "sigma_z = " << sigma_z << " var a is " << var_a << " var_b is " << var_b << endl;
+
+    //cout << "sigma_y = " << sigma_y << " var c is " << var_c << " var_d is " << var_d << endl;
+    //cout << "sigma_z = " << sigma_z << " var a is " << var_a << " var_b is " << var_b << endl;
     conc = calc_conc_w_reflection(x_m, y_m, z_m, emissions_strength, height_effective_stack, plume_wind_speed, sigma_y, sigma_z);
     conc_ug = conc*1000000;
     cout << "The concentration at " << x_m << "m, " << y_m << "m, " << z_m << "m from the source is " << conc << " grams/meters^3 or ";
     cout << conc_ug << " micrograms/meters^3. " << endl;
     cin >> end_program;
-
 }
