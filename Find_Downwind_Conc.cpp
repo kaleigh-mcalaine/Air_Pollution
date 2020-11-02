@@ -4,7 +4,12 @@
 #include <string>
 using namespace std;
 
+    /* ~ MAX: if these (or some of these) values don't change, make them constants
+     * ~ MAX: I would also sort your variables by if they are constants, like put them
+     *      at the top and put the variables that change below them
+     */
     double emissions_strength; //emission strength of source GRAMS/SECOND
+    // + MAX: ex -- const double pi = 3.1415;
     double pi = 3.1415;
     double height_effective_stack, height_stack, height_plume_rise;  //effective height of emissions stack = stack height + plume rise
     string direction[3] = {"downwind (x)", "perpendicular to the wind (y)", "vertical (z)"};// coordinate directions x = downwind, y = perpindicular to wind, z = vertical
@@ -93,8 +98,10 @@ using namespace std;
     
 double find_stability_class(int wind)
 {
+    // ~ MAX: for readability, I would try renaming this variable day_or_night
     while (d_or_n != "n" && d_or_n != "d")
     {
+        // ! MAX: I like your way of showing what the input is for an option -- [d]aytime / [n]ighttime
         cout << "Is this observation at [d]aytime or [n]ighttime]?" << endl;
         cin >> d_or_n; 
     }
@@ -120,6 +127,7 @@ double find_stability_class(int wind)
     }
     else if (d_or_n == "n")
     {
+        // ! MAX: nice variables!
         while (night_cloud_cover != "l" && night_cloud_cover != "m")
         {
             cout <<  "What is the nighttime cloud cover? [l]ess than 50% or [m]ore than 50%" << endl;
@@ -221,6 +229,12 @@ double get_sigma_z_vars(double x_dist, int class_num) //test
             for(int i = 0; i <= 3; i++)  // run through the rows, first column
                 { 
                     x_dist_limit = sigma_z_class_b_parameters[i][0];
+                    /* ~ MAX: This while loop will only ever run one time becuase of the return 0
+                     *        I would either remove the re return 0 (if you need the loop funtionality)
+                     *        OR I would change this into an if statement.
+                     *        Also, the return 0 will fully exit your program, I'm not sure if that was
+                     *        the intention
+                     */
                     while(x_dist <= x_dist_limit)
                     {
                         row_num = i; 
@@ -236,6 +250,7 @@ double get_sigma_z_vars(double x_dist, int class_num) //test
             for(int i = 0; i <= 6; i++)  // run through the rows, first column
                 { 
                     x_dist_limit = sigma_z_class_d_parameters[i][0];
+                    // ~ MAX: Same thing as above comment
                     while(x_dist <= x_dist_limit)
                     {
                         row_num = i; 
@@ -248,6 +263,7 @@ double get_sigma_z_vars(double x_dist, int class_num) //test
             for(int i = 0; i <= 9; i++)  // run through the rows, first column
                 { 
                     x_dist_limit = sigma_z_class_e_parameters[i][0];
+                    // ~ MAX: Same as above
                     while(x_dist <= x_dist_limit)
                     {
                         row_num = i; 
@@ -281,6 +297,7 @@ double calc_sigma_z(double var_a, double var_b, double x_dist)
     return sigma_z;
 }
 
+// ~ MAX: I would have this return a boolean (bool) instead of a string
 string check_num(string name) // Checks if a user input is a number or numericallly related
 {
     for (int i = 0; i < name.size(); i++)
@@ -343,10 +360,12 @@ int main()
             cout << endl;
         }
     }
+    // ~ MAX: You can probably remove this, unless you want to add some functionality here
     if (more_info == "n")
     {} 
 
 //EMISSION STRENGTH CALCULATIONS
+    // ~ MAX: I wanna explain this part over the phone
     while (emissions_strength == false) //User inputs only numerical operators
     {
         cout << "Enter the emissions strength at the source in GRAMS/SECOND" << endl ;
@@ -354,8 +373,17 @@ int main()
         check_num(emissions_strength_input);
         if (check_num_output == "false")
         {
+            /* ~ MAX: Wanted to point out the equality operator here
+             *        == is a comparison (like you did above in the while)
+             *        = is for assignment, which is what you want to do below
+             */
             emissions_strength == false;
         }
+        /* ~ MAX: If you convert check_num to return bool values instead of strings, you can make
+         *        the below if a little simpler
+         *        if check_num_output is set to the bool true rather than the string true, you can change the if to
+         *        if (check_num_output) { ... }
+         */
         if (check_num_output == "true")
         {
             emissions_strength = stod(emissions_strength_input);
@@ -373,6 +401,7 @@ int main()
             cin >> between_input[j];
         
             check_num(between_input[j]);
+            // ~ MAX: Same as above comments, same for next if
             if (check_num_output == "false")
             {
                 between[j] == false;
@@ -398,6 +427,7 @@ int main()
             cout << "Enter the effective stack height in METERS." << endl;
             cin >> height_effective_stack_input;
             check_num(height_effective_stack_input);
+            // ~ MAX: Same as above, same for next if
             if (check_num_output == "false")
             {
                 height_effective_stack == false;
@@ -416,6 +446,7 @@ int main()
             cout << "Enter the stack height in METERS" << endl;
             cin >> height_stack_input;
             check_num(height_stack_input);
+            // ~ MAX: Same as above, same for next if
             if (check_num_output == "false")
             {
                 height_stack == false;
@@ -431,6 +462,7 @@ int main()
             cout << "Enter the vertical plume rise above the stack in METERS" << endl;
             cin >> height_plume_rise_input;
             check_num(height_plume_rise_input);
+            // ~ MAX: Same as above, same for next if
             if (check_num_output == "false")
             {
                 height_plume_rise == false;
@@ -451,6 +483,7 @@ int main()
         cout << "Enter the wind speed through the plume in METERS/SECOND." << endl;
         cin >> plume_wind_speed_input;
         check_num(plume_wind_speed_input);
+        // ~ MAX: Same as above, same for next if
         if (check_num_output == "false")
         {
             plume_wind_speed == false;
@@ -525,6 +558,7 @@ int main()
                 cout << "Enter the surface wind speed in METERS/SECOND." << endl;
                 cin >> surface_wind_speed_input;
                 check_num(surface_wind_speed_input);
+                // ~ MAX: Same as above, same for next if
                 if (check_num_output == "false")
                 {
                     surface_wind_speed == false;
@@ -573,6 +607,7 @@ int main()
             cout << "Enter in sigma y (the direction " << direction[1] << ") in METERS." << endl;
             cin >> sigma_y_input;
             check_num(sigma_y_input);
+            // ~ MAX: Same as above, same for next if
             if (check_num_output == "false")
             {
                 sigma_y == false;
@@ -588,6 +623,7 @@ int main()
             cout << "Enter in sigma z (the direction " << direction[2] << ") in METERS." << endl;
             cin >> sigma_z_input;
             check_num(sigma_z_input);
+            // ~ MAX: Same as above, same for next if
             if (check_num_output == "false")
             {
                 sigma_z == false;
