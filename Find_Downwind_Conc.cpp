@@ -4,38 +4,15 @@
 #include <string>
 using namespace std;
 
-    /* ~ MAX: if these (or some of these) values don't change, make them constants
-     * ~ MAX: I would also sort your variables by if they are constants, like put them
-     *      at the top and put the variables that change below them
-     */
-    double emissions_strength; //emission strength of source GRAMS/SECOND
-    // + MAX: ex -- const double pi = 3.1415;
-    double pi = 3.1415;
-    double height_effective_stack, height_stack, height_plume_rise;  //effective height of emissions stack = stack height + plume rise
-    string direction[3] = {"downwind (x)", "perpendicular to the wind (y)", "vertical (z)"};// coordinate directions x = downwind, y = perpindicular to wind, z = vertical
-    double x_m, y_m, z_m, x_km;
-    double between[3] = {x_m, y_m, z_m};
-    double plume_wind_speed; 
-    double surface_wind_speed;
-    string more_info;
-    string d_or_n;
-    string in_solar_rad;
-    string night_cloud_cover;
-    string stack_height_calc_option;
-    string calc_stability_class, input_stability_class;
-    string input_sigmas;
-    string input_info;
+    //constants and reference matricies
+    const double pi = 3.1415;
     double stability_classes_daytime_strong[5] = {0,0,1,2,2};// A, A, B, C, C
     double stability_classes_daytime_moderate[5] = {0,1,1,2,3}; // A, B, B, C, D
     double stability_classes_daytime_slight[5] = {1,2,2,3,3}; // B, C, C, D, D
     double stability_classes_nightime_less_clouds[5] = {4,4,3,3,3}; // E, E, D, D, D
     double stability_classes_nightime_more_clouds[5] = {5,5,4,3,3}; // F, F, E, D, D
     string Numeric_to_Alphabet[6] = {"A", "B", "C", "D", "E", "F"}; //0=A 1=B 2=C 3=C 4=D 5=E 
-    int wind_array_index;
-    int num_pasquill_stability_class;
-    double sigma_y;
-    double sigma_z;
-    double var_a, var_b, var_c, var_d;
+    string direction[3] = {"downwind (x)", "perpendicular to the wind (y)", "vertical (z)"};// coordinate directions x = downwind, y = perpindicular to wind, z = vertical
     double sigma_z_class_a_parameters[9][3] = {
         {0.10, 122.800, 0.94470},
         {0.15, 158.080, 1.05420},
@@ -82,18 +59,44 @@ using namespace std;
         {30.00, 22.651, 0.32681},
         {60.00, 27.074, 0.27436},
         {10000, 34.219, 0.21716}
-    };
+    };    
+
+    //variables
+    int wind_array_index;
+    int num_pasquill_stability_class;
+    double sigma_y;
+    double sigma_z;
+    double var_a, var_b, var_c, var_d;
     double theta;
     int row_num;
     double x_dist_limit;
     double conc, conc_ug;
-    string emissions_strength_input, check_num_output;
+    string check_num_output;
+    double emissions_strength; //emission strength of source GRAMS/SECOND   
+    double x_m, y_m, z_m, x_km;
+    double between[3] = {x_m, y_m, z_m};
+    double height_effective_stack, height_stack, height_plume_rise;  //effective height of emissions stack = stack height + plume rise    
+    double plume_wind_speed; 
+    double surface_wind_speed;
+    
+    //user input variables in order of use
+    string more_info;
+    string input_info;
+    string emissions_strength_input;
     string between_input[3];
-    string plume_wind_speed_input;
+    string d_or_n;
+    string in_solar_rad;
+    string night_cloud_cover;
+    string stack_height_calc_option;
     string height_effective_stack_input, height_stack_input, height_plume_rise_input;
+    string plume_wind_speed_input;
+    string input_sigmas;
+    string calc_stability_class, input_stability_class;
     string surface_wind_speed_input;
     string sigma_y_input, sigma_z_input;
     double end_program; // hit any key to end the program (for users without their IDE set up to keep window up after running)
+
+    
 
     
 double find_stability_class(int wind)
